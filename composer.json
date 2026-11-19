@@ -1,0 +1,19 @@
+{
+    "name": "lekoala/kaly-mago",
+    "description": "Static analysis for explicit kaly-di bindings in Mago",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.3",
+        "carthage-software/mago": "1.60.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kaly\\Mago\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": "@php tests/run.php",
+        "test:consumer": "@php tests/run.php --consumer"
+    }
+}

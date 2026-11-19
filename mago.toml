@@ -1,0 +1,10 @@
+php-version = "8.3.0"
+
+[source]
+paths = ["src"]
+
+[formatter]
+print-width = 140
+
+[linter.rules]
+literal-named-argument = { enabled = false }

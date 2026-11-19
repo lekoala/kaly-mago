@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Mago on PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+
+    env:
+      KALY_DI_PATH: ${{ github.workspace }}/.ci-deps/kaly-di/src
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Checkout the kaly-di binding API used by the fixtures
+        uses: actions/checkout@v7
+        with:
+          repository: lekoala/kaly-di
+          ref: 67bf64fb1380fcc286e6ce734849618054d49f92
+          path: .ci-deps/kaly-di
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: vendor/bin/mago fmt --check src tests
+      - run: vendor/bin/mago lint --minimum-report-level warning src
+      - run: composer test
+      - run: composer test:consumer
